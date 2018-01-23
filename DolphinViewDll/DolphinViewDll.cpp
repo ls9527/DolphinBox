@@ -58,6 +58,6 @@ CDolphinViewDllApp theApp;
 BOOL CDolphinViewDllApp::InitInstance()
 {
 	CWinApp::InitInstance();
-
+	
 	return TRUE;
 }
