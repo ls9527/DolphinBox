@@ -1,7 +1,7 @@
 #pragma once
 
-void WINAPI SetViewHook(int processId);
-void WINAPI UnViewHook(int processId);
+void  SetViewHook(int threadId);
+void  UnViewHook();
 
 /*
  class  DolphinViewHeader

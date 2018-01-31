@@ -2,10 +2,11 @@
 //
 
 #include "stdafx.h"
-#include "DolphinViewDll.h"
 #include "MainDlg.h"
 #include "afxdialogex.h"
 #include <stack>
+#include "DolphinViewDll.h"
+#include "CustomMessage.h"
 
 using namespace std;
 // CMainDlg 对话框
@@ -31,6 +32,8 @@ void CMainDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CMainDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_EXEC, &CMainDlg::OnBnClickedButtonExec)
+	ON_MESSAGE(WM_UNINSTALL_DLL,&CMainDlg::OnUninstallDll)
+	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 
@@ -52,6 +55,7 @@ void CMainDlg::OnBnClickedButtonExec()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	m_boxMain.ResetContent();
+	/*
 	LPSkillTree point = 0;
 	
 	__asm{
@@ -98,4 +102,22 @@ void CMainDlg::OnBnClickedButtonExec()
 	m_boxMain.AddString(_T("str2"));
 	m_boxMain.AddString(_T("str3"));
 
+}
+extern CDolphinViewDllApp theApp;
+extern HWND g_dolphinViewMainHwnd;
+LRESULT CMainDlg::OnUninstallDll(WPARAM wParam, LPARAM lParam)
+{
+	DestroyWindow();
+	theApp.ExitInstance();
+	g_dolphinViewMainHwnd = NULL;
+	return 1;
+}
+
+
+void CMainDlg::OnDestroy()
+{
+	CDialogEx::OnDestroy();
+	
+	
+	// TODO: 在此处添加消息处理程序代码
 }

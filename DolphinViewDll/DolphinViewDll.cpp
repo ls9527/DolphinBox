@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "DolphinViewDll.h"
+#include "DolphinViewHeader.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

@@ -7,7 +7,7 @@
 #include "DolphinBoxDlg.h"
 #include "afxdialogex.h"
 #include "..\DolphinViewDll\DolphinViewHeader.h"
-
+#include "..\DolphinCore\DolphinCore.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -58,6 +58,8 @@ void CDolphinBoxDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_CHECK_HOOK, m_btnHook);
+	DDX_Control(pDX, IDC_CHECK1, m_coreHook);
+	DDX_Control(pDX, IDC_CHECK_LIB, m_chkHookLib);
 }
 
 BEGIN_MESSAGE_MAP(CDolphinBoxDlg, CDialogEx)
@@ -65,6 +67,10 @@ BEGIN_MESSAGE_MAP(CDolphinBoxDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_CHECK_HOOK, &CDolphinBoxDlg::OnBnClickedCheckHook)
+	ON_BN_CLICKED(IDC_BUTTON1, &CDolphinBoxDlg::OnBnClickedButton1)
+	ON_WM_CLOSE()
+	ON_BN_CLICKED(IDC_CHECK1, &CDolphinBoxDlg::OnBnClickedCheck1)
+	ON_BN_CLICKED(IDC_CHECK_LIB, &CDolphinBoxDlg::OnBnClickedCheckLib)
 END_MESSAGE_MAP()
 
 
@@ -157,16 +163,88 @@ HCURSOR CDolphinBoxDlg::OnQueryDragIcon()
 HMODULE handle = NULL;
 void CDolphinBoxDlg::OnBnClickedCheckHook()
 {
-	HWND hwnd = ::FindWindow(NULL,_T("无标题 - 记事本"));
+	HWND hwnd = ::FindWindow(_T("SciCalc"),NULL);
+	//HWND hwnd = ::FindWindow(_T("Notepad"),NULL);
+	//HWND hwnd = ::FindWindow(NULL,_T("Windows 任务管理器"));
+	
 	DWORD dwProcessId;
-	GetWindowThreadProcessId(hwnd,&dwProcessId);
+	DWORD threadId = GetWindowThreadProcessId(hwnd,&dwProcessId);
+	ASSERT(threadId);
 	// TODO: 在此添加控件通知处理程序代码
 	if(m_btnHook.GetCheck()){
-		handle = LoadLibrary(_T("DolphinViewDll.dll"));
+		//handle = LoadLibrary(_T("DolphinViewDll.dll"));
 		
-		SetViewHook(dwProcessId);
+		SetViewHook(threadId);
 	}else{
-		UnViewHook(dwProcessId);
-		::FreeLibrary(handle);
+		//::FreeLibrary(handle);
+		UnViewHook();
+		
 	}
+}
+
+
+void CDolphinBoxDlg::OnBnClickedButton1()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	
+	
+}
+
+
+void CDolphinBoxDlg::OnClose()
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	
+	CDialogEx::OnClose();
+	//UnViewHook();
+}
+
+HMODULE m_module = NULL;
+void CDolphinBoxDlg::OnBnClickedCheck1()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	HWND hwnd = ::FindWindow(_T("SciCalc"),NULL);
+	//HWND hwnd = ::FindWindow(_T("Notepad"),NULL);
+	//HWND hwnd = ::FindWindow(NULL,_T("Windows 任务管理器"));
+	
+	DWORD dwProcessId;
+	DWORD threadId = GetWindowThreadProcessId(hwnd,&dwProcessId);
+	ASSERT(threadId);
+	// TODO: 在此添加控件通知处理程序代码
+	if(m_coreHook.GetCheck()){
+		m_module = LoadLibrary(_T("DolphinViewDll.dll"));
+		//m_module = LoadLibrary(_T("DolphinCore.dll"));
+		void (*DCSetHook)(DWORD) = (void (*)(DWORD))GetProcAddress(m_module,"SetViewHook");
+		DCSetHook(threadId);
+	}else{
+		//::FreeLibrary(handle);
+		void (*DCUnHook)(void) = (void (*)(void))GetProcAddress(m_module,"UnViewHook");
+		DCUnHook();
+		FreeLibrary(m_module);
+	}
+}
+
+
+void CDolphinBoxDlg::OnBnClickedCheckLib()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	HWND hwnd = ::FindWindow(_T("SciCalc"),NULL);
+	//HWND hwnd = ::FindWindow(_T("Notepad"),NULL);
+	//HWND hwnd = ::FindWindow(NULL,_T("Windows 任务管理器"));
+
+	DWORD dwProcessId;
+	DWORD threadId = GetWindowThreadProcessId(hwnd,&dwProcessId);
+	ASSERT(threadId);
+	// TODO: 在此添加控件通知处理程序代码
+	if(m_chkHookLib.GetCheck()){
+	
+		
+		DCSetHook(threadId);
+	}else{
+		//::FreeLibrary(handle);
+	
+		DCUnHook();
+		//FreeLibrary(m_module);
+	}
+
 }

@@ -22,4 +22,7 @@ protected:
 public:
 	CListBox m_boxMain;
 	afx_msg void OnBnClickedButtonExec();
+
+	afx_msg LRESULT OnUninstallDll(WPARAM wParam, LPARAM lParam);
+	afx_msg void OnDestroy();
 };

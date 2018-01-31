@@ -37,4 +37,11 @@ public:
 
 private:
 	
+public:
+	afx_msg void OnBnClickedButton1();
+	afx_msg void OnClose();
+	CButton m_coreHook;
+	afx_msg void OnBnClickedCheck1();
+	CButton m_chkHookLib;
+	afx_msg void OnBnClickedCheckLib();
 };
