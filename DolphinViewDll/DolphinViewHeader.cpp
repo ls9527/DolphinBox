@@ -32,7 +32,7 @@ LRESULT CALLBACK KeyboardProc(
 					mainDlg = new CMainDlg();
 					mainDlg->Create(IDD_DIALOG_MAIN);
 					 g_dolphinViewMainHwnd = mainDlg->m_hWnd;
-					AfxMessageBox(_T("Create MainWindow"));
+					
 				}
 				mainDlg->ShowWindow(SW_SHOWNORMAL);
 			}
