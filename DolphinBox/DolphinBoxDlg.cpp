@@ -8,6 +8,7 @@
 #include "afxdialogex.h"
 #include "..\DolphinViewDll\DolphinViewHeader.h"
 #include "..\DolphinCore\DolphinCore.h"
+#include "AyaProp.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -182,11 +183,34 @@ void CDolphinBoxDlg::OnBnClickedCheckHook()
 	}
 }
 
-
+typedef struct tagStudent{
+	 tagStudent *m1;
+	 char a_1[8];
+	 tagStudent *m2;
+	 char a_2[4];
+	 tagStudent *m3;
+}Student;
 void CDolphinBoxDlg::OnBnClickedButton1()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	
+	Student stu1,stu2,stu3,stu10,stu12,stu13;
+	stu1.m1 = &stu2;
+	stu1.m2=&stu3;
+	stu1.m3=&stu10;
+	stu2.m2=&stu12;
+	stu12.m1=&stu13;
+	
+	UINT stu1Addr = (UINT)&stu1;
+	UINT stu2Addr = (UINT)&stu1.m2->m2;
+	
+	AyaChain chain;
+	chain.AddLeaAddr((UINT)&stu1);
+	chain.AddMovAddr(0xC);//m2
+	chain.AddLeaAddr(0xC);//m2
+	//chain.AddMovAddr(0xC);
+	UINT stuEndValue = chain.GetEndValue();
+	UINT stu1GetAddr = stuEndValue;
 	
 }
 
